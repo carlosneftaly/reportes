@@ -1,2 +1,1 @@
-# reportes
-Generando reportes en R con Rmarkdown y Knitr
+# Generando reportes en R con Rmarkdown y Knitr
