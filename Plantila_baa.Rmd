@@ -1,0 +1,98 @@
+---
+title: "Experimento 1"
+author: "Carlos Neftaly Lozano - [facebook.com/databasedMD](facebook.com/databasedMD)"
+date: "3  de septiembre, 2018"
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    theme: united
+    highlight: tango 
+    toc_float: true
+    
+---
+
+<script>
+   $(document).ready(function() {
+     $head = $('#header');
+     $head.prepend('<img src=\"baa.png\" style=\"float: right;width: 200px;\"/>')
+   });
+</script>
+
+
+
+# Análisis de varianza - Experimento 1 
+
+_Sugerencia_: Aquí se puede agregar una descripción breve del análisis que se va a conducir. Se puede usar texto de la misma forma que un procesador de texto (i.e. Word). 
+    
+El primer `chunk` se sugiere dejarlo exclusivamente para cargar los _paquetes_ y los _datos_. 
+   
+
+```{r include=FALSE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library("cluster")
+library("factoextra")
+library(ggsci)
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+library(FactoMineR)
+library(ggpubr)
+library(agricolae)
+library(car)
+
+datos<-read.csv('DCA.csv', header = T, sep = ';')
+attach(datos)
+```
+
+
+## Ajuste del modelo lineal general 
+
+```{r}
+mod1<-lm(Peso~Tratamiento)
+summary(mod1)
+```
+
+## Supuestos {.tabset}
+
+Verificación de supuesto de ANOVA, para su cumplimiento se esperan _Valores P_ ..........
+
+### Normalidad
+```{r}
+shapiro.test(mod1$residuals)
+```
+
+### Homocedasticidad
+```{r}
+leveneTest(mod1)
+
+```
+
+### Gráficos del modelo 
+
+```{r}
+par(mfrow=c(2,2))
+plot(mod1)
+```
+
+## ANOVA {.tabset}
+
+### Tabla ANOVA
+```{r}
+anova(mod1)
+```
+ 
+### Tabla Comparaciones múltiples 
+```{r}
+HSD.test(mod1, 'Tratamiento', console = T)
+```
+
+### Gráfico
+
+```{r}
+ggplot(datos, aes(Tratamiento, Peso, fill=Tratamiento)) + 
+  geom_boxplot() + geom_jitter() + theme_bw()
+```
+
